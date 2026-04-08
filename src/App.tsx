@@ -41,16 +41,10 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const response = await getChatResponse([...messages, userMessage], metadata);
+      const result = await getChatResponse([...messages, userMessage], metadata);
       
-      // Basic assessment detection from response (simple heuristic for UI feedback)
-      if (response.toLowerCase().includes('crisis')) setAssessment('Crisis');
-      else if (response.toLowerCase().includes('high concern')) setAssessment('High Concern');
-      else if (response.toLowerCase().includes('moderate concern')) setAssessment('Moderate Concern');
-      else if (response.toLowerCase().includes('monitor')) setAssessment('Monitor');
-      else setAssessment('Safe');
-
-      setMessages(prev => [...prev, { role: 'model', content: response }]);
+      setAssessment(result.assessment);
+      setMessages(prev => [...prev, { role: 'model', content: result.text }]);
     } catch (error) {
       setMessages(prev => [...prev, { 
         role: 'model', 
